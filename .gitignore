@@ -43,3 +43,5 @@ mlruns/
 # Airflow
 airflow.db
 airflow.cfg
+# Screenshots
+Screenshots/
