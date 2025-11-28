@@ -52,35 +52,37 @@ with DAG(
     )
 
     # Task 2: Validate data quality
-    validate_data = PythonOperator(
+    validate_data = BashOperator(
         task_id='validate_data_quality',
-        python_callable=lambda: print("✓ Data validation passed (placeholder)"),
+        bash_command='cd /opt/airflow && python src/ingestion/validate_data.py',
         doc_md="""
         ### Validate Data Quality
         
         Checks:
         - No missing required fields
-        - Valid date ranges
-        - Referential integrity (foreign keys exist)
-        - Reasonable value ranges
+        - Valid date ranges (discharge > admit)
+        - Referential integrity (patient_ids exist)
+        - Reasonable value ranges (age 18-100, LOS > 0)
+        - No duplicate IDs
         
-        **Action:** Fails pipeline if critical issues found
+        **Action:** Fails pipeline if critical errors found
         """,
     )
 
-    # Task 3: Load to database (placeholder)
-    load_to_db = PythonOperator(
+    # Task 3: Load to database
+    load_to_db = BashOperator(
         task_id='load_to_database',
-        python_callable=lambda: print("✓ Data loaded to database (placeholder)"),
+        bash_command='cd /opt/airflow && python src/ingestion/load_data.py',
         doc_md="""
         ### Load to Database
         
         Loads validated data into PostgreSQL:
+        - Creates tables if not exist
         - Truncates staging tables
-        - Bulk inserts from CSV
-        - Updates row counts
+        - Bulk inserts from CSV (execute_values for performance)
+        - Verifies row counts
         
-        **Output:** Data available for transformation
+        **Output:** Data available in Postgres for transformation
         """,
     )
 
