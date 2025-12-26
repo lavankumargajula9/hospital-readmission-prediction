@@ -12,7 +12,7 @@ import sys
 # Configuration
 DATA_DIR = Path("data/raw")
 DB_CONFIG = {
-    'host': 'postgres',
+    'host': 'localhost',
     'port': 5432,
     'database': 'airflow',
     'user': 'airflow',
